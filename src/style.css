@@ -1,0 +1,12 @@
+main
+{
+    max-width: 800px;
+    background-color:azure;
+    padding: 10px;
+    min-height: 100vh;
+    margin: auto;
+}
+body
+{
+    background-color: rgb(44, 101, 107);
+}
