@@ -35,14 +35,13 @@ def main():
        'Projected Annual Job Openings', 'Fastest_Growing_Rank',
        '2024 Employment', '2034 Employment', 'Percent Change', 'Earnings']]
     
-    merged_df=merged_df.rename(columns={"Earnings_x":"Earnings",'2022 Employment_x':'2022 Employment','Typical Education':'Education'})
+    merged_df=merged_df.rename(columns={"Earnings_x":"Earnings",'2022 Employment_x':'2022 NJ Employment','Typical Education':'Education','2024 Employment':'2024 US Employment','2034 Employment':'2034 US Employment'})
 
     print(merged_df.columns)
 
     merged_df["Education_Level"]=merged_df.apply(calculate_education_level,axis=1,education_level_df=education_level_df)
 
-
-    merged_df.to_excel("public/CareerOneStop_Data.xlsx",index=False)
+    merged_df.to_excel("public/CareerOneStop_Data.xlsx",index=False,sheet_name="Data")
 
 
 if __name__=="__main__":
