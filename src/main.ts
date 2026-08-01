@@ -50,10 +50,8 @@ function graph_yearly_data(filtered_career_data:any)
   {
     values[i]=Math.round(values[i]);
   }
-  console.log(labels);
-  console.log(values);
 
-  let line_plugins=[]
+  let line_plugins=[];
   for(let i=1;i<appartment_data.length;i++)
   {
     const appartment_type=appartment_data[i];
@@ -138,8 +136,7 @@ function graph_monthly_data(filtered_career_data:any)
   {
     values[i]=Math.round(values[i]);
   }
-  console.log(labels);
-  console.log(values);
+  
 
   let line_plugins=[]
   for(let i=1;i<appartment_data.length;i++)
@@ -226,8 +223,6 @@ function graph_payment_data(filtered_career_data:any)
   {
     values[i]=Math.round(values[i]);
   }
-  console.log(labels);
-  console.log(values);
 
   let line_plugins=[]
   for(let i=1;i<appartment_data.length;i++)
@@ -265,6 +260,7 @@ function graph_payment_data(filtered_career_data:any)
   y_range[1]=Math.max(y_range[1],appartment_data[appartment_data.length-1]['Monthly_Rent']/target_percent);
   y_range[1]*=1.1;
   y_range[1]=Math.ceil(y_range[1]/1000)*1000;
+
   let payment_results_canvas=document.getElementById("payment_results_canvas") as HTMLCanvasElement;
   payment_chart=new Chart(
         payment_results_canvas,
@@ -300,6 +296,77 @@ function graph_payment_data(filtered_career_data:any)
         }
     );
 }
+function graph_rent_data()
+{
+  if(rent_chart!=null)
+  {
+    rent_chart.destroy();
+  }
+
+  let labels=get_values(appartment_data,'Type') as string[];
+  labels=shorten_values(labels);
+  let values=get_values(appartment_data,'Monthly_Rent');
+  let values_recommended=values.map(value=>value/target_percent);
+  for(let i=0;i<values.length;i++)
+  {
+    values[i]=Math.round(values[i]);
+    values_recommended[i]=Math.round(values_recommended[i]);
+  }
+
+  const data = {
+    labels: labels,
+    datasets: [
+    {
+      label: `Appartment Monthly Rent Costs`,
+      data: values,
+      borderWidth: 1
+    },
+    {
+      label: `Recommended Monthly Income`,
+      data: values_recommended,
+      borderWidth: 1
+    },
+    ]
+  };
+
+  y_range[1]=values_recommended[values_recommended.length-1];
+  y_range[1]*=1.1;
+  y_range[1]=Math.ceil(y_range[1]/1000)*1000;
+
+  let rent_results_canvas=document.getElementById("rent_results_canvas") as HTMLCanvasElement;
+  rent_chart=new Chart(
+        rent_results_canvas,
+        {
+          type: 'bar',
+          data: data as any,
+          options:
+          {
+            scales: 
+            {
+              y: {
+                min: 0,
+                max: y_range[1],
+                ticks: 
+                {
+                  // Appends % symbol to the y-axis grid text
+                  callback: function(value) 
+                  {
+                    return "$ "+value;
+                  }
+                }
+              }
+            },
+            plugins:
+            {
+              title:{
+                display: true,
+                text: `Appartment Rent and Recommended Income`
+              }
+            }
+          },
+        }
+    );
+}
 export function update_values()
 {
   const target_education_level_element=document.getElementById("education_level") as HTMLInputElement;
@@ -318,11 +385,10 @@ export function update_values()
   }
   filtered_career_data=filtered_career_data.slice(0,10);
 
-  console.log(filtered_career_data);
-
   graph_yearly_data(filtered_career_data);
   graph_monthly_data(filtered_career_data);
   graph_payment_data(filtered_career_data);
+  graph_rent_data();
 }
 export async function main()
 {
@@ -332,10 +398,7 @@ export async function main()
     career_data[i]["2025 Median Wages Monthly"]=career_data[i]["2025 Median Wages Annual"]/12;
     career_data[i]["2025 Recommended Appartment Payment"]=career_data[i]["2025 Median Wages Monthly"]*target_percent;
   }
-  console.log(career_data);
-
   appartment_data=await get_data("New_Jersey_Expenses.xlsx","Appartments");
-  console.log(appartment_data);
 
   update_values();
 }
@@ -350,3 +413,4 @@ let y_range=[0,0];
 let yearly_chart: Chart | null = null;
 let monthly_chart: Chart | null = null;
 let payment_chart: Chart | null = null;
+let rent_chart: Chart | null=null;
