@@ -20,6 +20,22 @@ function get_min_and_max(arr:any,key:string)
   }
   return res;
 }
+function shorten_values(values:string[])
+{
+  let res=[];
+  for(let value of values)
+  {
+    if(value.length>=18)
+    {
+      res.push(value.slice(0,15)+"...");
+    }
+    else
+    {
+      res.push(value);
+    }
+  }
+  return res;
+}
 function graph_yearly_data(filtered_career_data:any)
 {
   if(yearly_chart!=null)
@@ -27,7 +43,8 @@ function graph_yearly_data(filtered_career_data:any)
     yearly_chart.destroy();
   }
 
-  let labels=get_values(filtered_career_data,'Occupation');
+  let labels=get_values(filtered_career_data,'Occupation') as string[];
+  labels=shorten_values(labels);
   let values=get_values(filtered_career_data,'2025 Median Wages Annual');
   for(let i=0;i<values.length;i++)
   {
@@ -70,6 +87,7 @@ function graph_yearly_data(filtered_career_data:any)
 
   y_range=get_min_and_max(filtered_career_data,"2025 Median Wages Annual");
   y_range[1]=Math.max(y_range[1],appartment_data[appartment_data.length-1]['Monthly_Rent']*12/target_percent);
+  y_range[1]*=1.1;
   y_range[1]=Math.ceil(y_range[1]/1000)*1000;
   let yearly_results_canvas=document.getElementById("yearly_results_canvas") as HTMLCanvasElement;
   yearly_chart=new Chart(
@@ -113,7 +131,8 @@ function graph_monthly_data(filtered_career_data:any)
     monthly_chart.destroy();
   }
 
-  let labels=get_values(filtered_career_data,'Occupation');
+  let labels=get_values(filtered_career_data,'Occupation') as string[];
+  labels=shorten_values(labels);
   let values=get_values(filtered_career_data,'2025 Median Wages Monthly');
   for(let i=0;i<values.length;i++)
   {
@@ -156,6 +175,7 @@ function graph_monthly_data(filtered_career_data:any)
 
   y_range=get_min_and_max(filtered_career_data,"2025 Median Wages Monthly");
   y_range[1]=Math.max(y_range[1],appartment_data[appartment_data.length-1]['Monthly_Rent']/target_percent);
+  y_range[1]*=1.1;
   y_range[1]=Math.ceil(y_range[1]/1000)*1000;
   let monthly_results_canvas=document.getElementById("monthly_results_canvas") as HTMLCanvasElement;
   monthly_chart=new Chart(
@@ -199,7 +219,8 @@ function graph_payment_data(filtered_career_data:any)
     payment_chart.destroy();
   }
 
-  let labels=get_values(filtered_career_data,'Occupation');
+  let labels=get_values(filtered_career_data,'Occupation') as string[];
+  labels=shorten_values(labels);
   let values=get_values(filtered_career_data,'2025 Recommended Appartment Payment');
   for(let i=0;i<values.length;i++)
   {
@@ -234,7 +255,7 @@ function graph_payment_data(filtered_career_data:any)
   const data = {
     labels: labels,
     datasets: [{
-      label: `Appartment Payment (${target_percent*100}%)`,
+      label: `Appartment Payment (${target_percent_written})`,
       data: values,
       borderWidth: 1
     }]
@@ -242,6 +263,7 @@ function graph_payment_data(filtered_career_data:any)
 
   y_range=get_min_and_max(filtered_career_data,"2025 Appartment Payment");
   y_range[1]=Math.max(y_range[1],appartment_data[appartment_data.length-1]['Monthly_Rent']/target_percent);
+  y_range[1]*=1.1;
   y_range[1]=Math.ceil(y_range[1]/1000)*1000;
   let payment_results_canvas=document.getElementById("payment_results_canvas") as HTMLCanvasElement;
   payment_chart=new Chart(
@@ -270,7 +292,7 @@ function graph_payment_data(filtered_career_data:any)
             {
               title:{
                 display: true,
-                text: `Appartment Payment (${target_percent*100}%)`
+                text: `Appartment Payment (${target_percent_written})`
               }
             }
           },
@@ -285,6 +307,7 @@ export function update_values()
 
   const target_percent_element=document.getElementById("target_percent") as HTMLInputElement;
   target_percent=parseInt(target_percent_element.value)/100.0;
+  target_percent_written=target_percent_element.value+"%";
   document.getElementById("target_percent_display")!.innerHTML=`${target_percent_element.value}%`;
 
   let filtered_career_data=[...career_data];
@@ -321,6 +344,7 @@ let career_data: Record<any, any>[]=[];
 let appartment_data: Record<any, any>[]=[];
 
 let target_percent=0.30;
+let target_percent_written="30%";
 
 let y_range=[0,0];
 let yearly_chart: Chart | null = null;
