@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/career-one-stop-vs-nj-expenses/favicon.svg" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>career-one-stop-vs-nj-expenses</title>
+    <script type="module" crossorigin src="/career-one-stop-vs-nj-expenses/assets/index-s-fXEn0W.js"></script>
+    <link rel="stylesheet" crossorigin href="/career-one-stop-vs-nj-expenses/assets/index-dIvJUsMS.css">
+  </head>
+  <body>
+  <main>
+  <h1>Career One Stop vs NJ Expenses</h1>
+  <form>
+  
+  <div>
+  <label for="education_level">
+  Education Level
+  </label>
+  <select id="education_level">
+  <option value="*">Any</option>
+  <option value=1>Some High School</option>
+  <option value=2>High School Diploma</option>
+  <option value=3>Some College</option>
+  <option value=4>Bachelor's Degree</option>
+  <option value=5>Master's Degree or Higher</option>
+  </select>
+  </div>
+
+  <div>
+  <label for="target_percent">Target Percent</label>
+  <table>
+  <tbody>
+  <tr>
+  <td id="target_percent_display">30%</td>
+  <td colspan="3">
+    <input id="target_percent" type="range" min="10" value="30" max="50" style="width: 400px;">
+  </td>
+  </tr>
+  <tr>
+  <td></td>
+  <td>10%</td>
+  <td style="text-align: center;">30%</td>
+  <td style="text-align: right;">50%</td>
+  </tr>
+  </tbody>
+  </table>
+  </div>
+
+  </form>
+
+  <div id="rent_results">
+  <canvas id="rent_results_canvas"></canvas>
+  </div>
+  <div id="yearly_results">
+  <canvas id="yearly_results_canvas"></canvas>
+  </div>
+  <div id="monthly_results">
+  <canvas id="monthly_results_canvas"></canvas>
+  </div>
+  <div id="payment_results">
+  <canvas id="payment_results_canvas"></canvas>
+  </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  </body>
+</html>
