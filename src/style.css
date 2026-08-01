@@ -10,3 +10,10 @@ body
 {
     background-color: rgb(44, 101, 107);
 }
+table,th,td
+{
+    border-collapse: collapse;
+}
+th,td
+{
+}

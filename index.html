@@ -12,6 +12,8 @@
   <main>
   <h1>Career One Stop vs NJ Expenses</h1>
   <form>
+  
+  <div>
   <label for="education_level">
   Education Level
   </label>
@@ -23,9 +25,34 @@
   <option value=4>Bachelor's Degree</option>
   <option value=5>Master's Degree or Higher</option>
   </select>
+  </div>
+
+  <div>
+  <label for="target_percent">Target Percent</label>
+  <table>
+  <tbody>
+  <tr>
+  <td id="target_percent_display">30%</td>
+  <td colspan="3">
+    <input id="target_percent" type="range" min="10" value="30" max="50" style="width: 400px;">
+  </td>
+  </tr>
+  <tr>
+  <td></td>
+  <td>10%</td>
+  <td style="text-align: center;">30%</td>
+  <td style="text-align: right;">50%</td>
+  </tr>
+  </tbody>
+  </table>
+  </div>
+
   </form>
-  <div id="results">
-  <canvas id="results_canvas"></canvas>
+  <div id="yearly_results">
+  <canvas id="yearly_results_canvas"></canvas>
+  </div>
+  <div id="monthly_results">
+  <canvas id="monthly_results_canvas"></canvas>
   </div>
   <div id="payment_results">
   <canvas id="payment_results_canvas"></canvas>
@@ -37,6 +64,7 @@
   import {update_values,main} from "/src/main.ts";
 
   document.getElementById("education_level").onchange=update_values;
+  document.getElementById("target_percent").onchange=update_values;
   main();
   </script>
   </body>
