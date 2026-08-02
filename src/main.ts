@@ -1,6 +1,6 @@
 import get_data from "./read_excel";
 import Chart from 'chart.js/auto';
-
+import { make_bar_chart, make_line_chart } from "./make_chart";
 function get_values(arr:any,key:string)
 {
   let res=[];
@@ -39,80 +39,7 @@ function shorten_values(values:string[])
   }
   return res;
 }
-function make_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,data:any,plugin_values:number[],chart_title:string)
-{
-  if (target_chart != null) {
-    target_chart.destroy();
-  }
-
-  y_range[1]=0;
-  for(let value of data.datasets[0].data)
-  {
-    y_range[1]=Math.max(y_range[1],parseInt(value));
-  }
-  let line_plugins=[];
-  for(let plugin_value of plugin_values)
-  {
-    y_range[1]=Math.max(y_range[1],plugin_value);
-
-    const line_plugin = 
-      {
-          id: 'horizontalLine',
-          afterDraw: (chart:any) => {
-              const yValue = chart.scales.y.getPixelForValue(plugin_value);
-              const ctx = chart.ctx;
-              ctx.save();
-              ctx.beginPath();
-              ctx.moveTo(chart.chartArea.left, yValue);
-              ctx.lineTo(chart.chartArea.right, yValue);
-              ctx.strokeStyle = "black";
-              ctx.lineWidth = 2;
-              ctx.stroke();
-              ctx.restore();
-          }
-    };
-    line_plugins.push(line_plugin);
-  }
-  y_range[1]*=1.1;
-  y_range[1]=Math.ceil(y_range[1]/1000)*1000;
-
-
-  target_chart=new Chart(
-        target_canvas,
-        {
-          type: 'line',
-          data: data as any,
-          options:
-          {
-            scales: 
-            {
-              y: {
-                min: 0,
-                max: y_range[1],
-                ticks: 
-                {
-                  // Appends % symbol to the y-axis grid text
-                  callback: function(value) 
-                  {
-                    return "$ "+value;
-                  }
-                }
-              }
-            },
-            plugins:
-            {
-              title:{
-                display: true,
-                text: chart_title
-              }
-            }
-          },
-          plugins: line_plugins
-        }
-    );
-    return target_chart;
-}
-function graph_yearly_data(filtered_career_data:any)
+function graph_yearly_wages_data(filtered_career_data:any)
 {
   if(yearly_wages_chart!=null)
   {
@@ -144,9 +71,9 @@ function graph_yearly_data(filtered_career_data:any)
   };
 
   let yearly_wages_results_canvas=document.getElementById("yearly_wages_results_canvas") as HTMLCanvasElement;
-  yearly_wages_chart=make_chart(yearly_wages_chart,yearly_wages_results_canvas,data,plugin_values,"2025 Median Annual Wages");
+  yearly_wages_chart=make_line_chart(yearly_wages_chart,yearly_wages_results_canvas,data,plugin_values,"2025 Median Annual Wages");
 }
-function graph_monthly_data(filtered_career_data:any)
+function graph_monthly_wages_data(filtered_career_data:any)
 {
   if(monthly_wages_chart!=null)
   {
@@ -177,8 +104,7 @@ function graph_monthly_data(filtered_career_data:any)
     }]
   };
   let monthly_wages_results_canvas=document.getElementById("monthly_wages_results_canvas") as HTMLCanvasElement;
-  
-  monthly_wages_chart=make_chart(monthly_wages_chart,monthly_wages_results_canvas,data,plugin_values,"2025 Median Monthly Wages");
+  monthly_wages_chart=make_line_chart(monthly_wages_chart,monthly_wages_results_canvas,data,plugin_values,"2025 Median Monthly Wages");
 }
 function graph_appartment_payment_data(filtered_career_data:any)
 {
@@ -212,7 +138,7 @@ function graph_appartment_payment_data(filtered_career_data:any)
   };
 
   let appartment_payment_results_canvas=document.getElementById("appartment_payment_results_canvas") as HTMLCanvasElement;
-  appartment_payment_chart=make_chart(appartment_payment_chart,appartment_payment_results_canvas,data,plugin_values,`Appartment Payment (${target_percent_written})`);
+  appartment_payment_chart=make_line_chart(appartment_payment_chart,appartment_payment_results_canvas,data,plugin_values,`Appartment Payment (${target_percent_written})`);
 }
 function graph_monthly_rent_data()
 {
@@ -247,43 +173,8 @@ function graph_monthly_rent_data()
     ]
   };
 
-  y_range[1]=values_recommended_monthly[values_recommended_monthly.length-1];
-  y_range[1]*=1.1;
-  y_range[1]=Math.ceil(y_range[1]/1000)*1000;
-
   let monthly_rent_results_canvas=document.getElementById("monthly_rent_results_canvas") as HTMLCanvasElement;
-  monthly_rent_chart=new Chart(
-        monthly_rent_results_canvas,
-        {
-          type: 'bar',
-          data: data as any,
-          options:
-          {
-            scales: 
-            {
-              y: {
-                min: 0,
-                max: y_range[1],
-                ticks: 
-                {
-                  // Appends % symbol to the y-axis grid text
-                  callback: function(value) 
-                  {
-                    return "$ "+value;
-                  }
-                }
-              }
-            },
-            plugins:
-            {
-              title:{
-                display: true,
-                text: `Appartment Rent and Recommended Monthly Income`
-              }
-            }
-          },
-        }
-    );
+  monthly_rent_chart=make_bar_chart(monthly_rent_chart,monthly_rent_results_canvas,data,'Appartment Rent and Recommended Monthly Income');
 }
 function graph_yearly_rent_data()
 {
@@ -320,43 +211,9 @@ function graph_yearly_rent_data()
     ]
   };
 
-  y_range[1]=values_recommended_yearly[values_recommended_yearly.length-1];
-  y_range[1]*=1.1;
-  y_range[1]=Math.ceil(y_range[1]/1000)*1000;
 
   let yearly_rent_results_canvas=document.getElementById("yearly_rent_results_canvas") as HTMLCanvasElement;
-  yearly_rent_chart=new Chart(
-        yearly_rent_results_canvas,
-        {
-          type: 'bar',
-          data: data as any,
-          options:
-          {
-            scales: 
-            {
-              y: {
-                min: 0,
-                max: y_range[1],
-                ticks: 
-                {
-                  // Appends % symbol to the y-axis grid text
-                  callback: function(value) 
-                  {
-                    return "$ "+value;
-                  }
-                }
-              }
-            },
-            plugins:
-            {
-              title:{
-                display: true,
-                text: `Appartment Rent and Recommended Yearly Income`
-              }
-            }
-          },
-        }
-    );
+  yearly_rent_chart=make_bar_chart(yearly_wages_chart,yearly_rent_results_canvas,data,'Appartment Rent and Recommended Yearly Income');
 }
 
 export function update_values()
@@ -377,8 +234,8 @@ export function update_values()
   }
   filtered_career_data=filtered_career_data.slice(0,10);
 
-  graph_yearly_data(filtered_career_data);
-  graph_monthly_data(filtered_career_data);
+  graph_yearly_wages_data(filtered_career_data);
+  graph_monthly_wages_data(filtered_career_data);
   graph_appartment_payment_data(filtered_career_data);
   graph_monthly_rent_data();
   graph_yearly_rent_data();
@@ -402,7 +259,6 @@ let appartment_data: Record<any, any>[]=[];
 let target_percent=0.30;
 let target_percent_written="30%";
 
-let y_range=[0,0];
 let yearly_wages_chart: Chart | null = null;
 let monthly_wages_chart: Chart | null = null;
 let appartment_payment_chart: Chart | null = null;
