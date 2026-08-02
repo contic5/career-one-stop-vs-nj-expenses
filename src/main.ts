@@ -36,6 +36,42 @@ function shorten_values(values:string[])
   }
   return res;
 }
+function make_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,data:any,line_plugins:any,chart_title:string)
+{
+  target_chart=new Chart(
+        target_canvas,
+        {
+          type: 'line',
+          data: data as any,
+          options:
+          {
+            scales: 
+            {
+              y: {
+                min: 0,
+                max: y_range[1],
+                ticks: 
+                {
+                  // Appends % symbol to the y-axis grid text
+                  callback: function(value) 
+                  {
+                    return "$ "+value;
+                  }
+                }
+              }
+            },
+            plugins:
+            {
+              title:{
+                display: true,
+                text: chart_title
+              }
+            }
+          },
+          plugins: line_plugins
+        }
+    );
+}
 function graph_yearly_data(filtered_career_data:any)
 {
   if(yearly_chart!=null)
@@ -175,39 +211,8 @@ function graph_monthly_data(filtered_career_data:any)
   y_range[1]*=1.1;
   y_range[1]=Math.ceil(y_range[1]/1000)*1000;
   let monthly_results_canvas=document.getElementById("monthly_results_canvas") as HTMLCanvasElement;
-  monthly_chart=new Chart(
-        monthly_results_canvas,
-        {
-          type: 'line',
-          data: data as any,
-          options:
-          {
-            scales: 
-            {
-              y: {
-                min: 0,
-                max: y_range[1],
-                ticks: 
-                {
-                  // Appends % symbol to the y-axis grid text
-                  callback: function(value) 
-                  {
-                    return "$ "+value;
-                  }
-                }
-              }
-            },
-            plugins:
-            {
-              title:{
-                display: true,
-                text: "2025 Median Monthly Wages"
-              }
-            }
-          },
-          plugins: line_plugins
-        }
-    );
+  
+  make_chart(monthly_chart,monthly_results_canvas,data,line_plugins,"2025 Median Monthly Wages");
 }
 function graph_payment_data(filtered_career_data:any)
 {
