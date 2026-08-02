@@ -55,10 +55,10 @@ function graph_yearly_wages_data(filtered_career_data:any)
   }
 
   let plugin_values=[];
-  for(let i=1;i<appartment_data.length;i++)
+  for(let i=0;i<apartment_data.length;i++)
   {
-    const appartment_type=appartment_data[i];
-    plugin_values.push(appartment_type['Monthly_Rent']*12/target_percent);
+    const apartment_type=apartment_data[i];
+    plugin_values.push(apartment_type['Monthly_Rent']*12/target_percent);
   }
 
   const data = {
@@ -89,10 +89,10 @@ function graph_monthly_wages_data(filtered_career_data:any)
   }
   
   let plugin_values=[];
-  for(let i=1;i<appartment_data.length;i++)
+  for(let i=0;i<apartment_data.length;i++)
   {
-    const appartment_type=appartment_data[i];
-    plugin_values.push(appartment_type['Monthly_Rent']/target_percent);
+    const apartment_type=apartment_data[i];
+    plugin_values.push(apartment_type['Monthly_Rent']/target_percent);
   }
 
   const data = {
@@ -106,39 +106,39 @@ function graph_monthly_wages_data(filtered_career_data:any)
   let monthly_wages_results_canvas=document.getElementById("monthly_wages_results_canvas") as HTMLCanvasElement;
   monthly_wages_chart=make_line_chart(monthly_wages_chart,monthly_wages_results_canvas,data,plugin_values,"2025 Median Monthly Wages");
 }
-function graph_appartment_payment_data(filtered_career_data:any)
+function graph_apartment_payment_data(filtered_career_data:any)
 {
-  if(appartment_payment_chart!=null)
+  if(apartment_payment_chart!=null)
   {
-    appartment_payment_chart.destroy();
+    apartment_payment_chart.destroy();
   }
 
   let labels=get_values(filtered_career_data,'Occupation') as string[];
   labels=shorten_values(labels);
-  let values=get_values(filtered_career_data,'2025 Recommended Appartment Payment');
+  let values=get_values(filtered_career_data,'2025 Recommended Apartment Payment');
   for(let i=0;i<values.length;i++)
   {
     values[i]=Math.round(values[i]);
   }
 
   let plugin_values=[];
-  for(let i=1;i<appartment_data.length;i++)
+  for(let i=0;i<apartment_data.length;i++)
   {
-    const appartment_type=appartment_data[i];
-    plugin_values.push(appartment_type['Monthly_Rent']);
+    const apartment_type=apartment_data[i];
+    plugin_values.push(apartment_type['Monthly_Rent']);
   }
 
   const data = {
     labels: labels,
     datasets: [{
-      label: `Appartment Payment (${target_percent_written})`,
+      label: `Apartment Payment (${target_percent_written})`,
       data: values,
       borderWidth: 1
     }]
   };
 
-  let appartment_payment_results_canvas=document.getElementById("appartment_payment_results_canvas") as HTMLCanvasElement;
-  appartment_payment_chart=make_line_chart(appartment_payment_chart,appartment_payment_results_canvas,data,plugin_values,`Appartment Payment (${target_percent_written})`);
+  let apartment_payment_results_canvas=document.getElementById("apartment_payment_results_canvas") as HTMLCanvasElement;
+  apartment_payment_chart=make_line_chart(apartment_payment_chart,apartment_payment_results_canvas,data,plugin_values,`Apartment Payment (${target_percent_written})`);
 }
 function graph_monthly_rent_data()
 {
@@ -147,9 +147,9 @@ function graph_monthly_rent_data()
     monthly_rent_chart.destroy();
   }
 
-  let labels=get_values(appartment_data,'Type') as string[];
+  let labels=get_values(apartment_data,'Type') as string[];
   labels=shorten_values(labels);
-  let values=get_values(appartment_data,'Monthly_Rent');
+  let values=get_values(apartment_data,'Monthly_Rent');
   let values_recommended_monthly=values.map(value=>value/target_percent);
   for(let i=0;i<values.length;i++)
   {
@@ -161,7 +161,7 @@ function graph_monthly_rent_data()
     labels: labels,
     datasets: [
     {
-      label: `Appartment Monthly Rent Costs`,
+      label: `Apartment Monthly Rent Costs`,
       data: values,
       borderWidth: 1
     },
@@ -174,7 +174,7 @@ function graph_monthly_rent_data()
   };
 
   let monthly_rent_results_canvas=document.getElementById("monthly_rent_results_canvas") as HTMLCanvasElement;
-  monthly_rent_chart=make_bar_chart(monthly_rent_chart,monthly_rent_results_canvas,data,'Appartment Rent and Recommended Monthly Income');
+  monthly_rent_chart=make_bar_chart(monthly_rent_chart,monthly_rent_results_canvas,data,'Apartment Rent and Recommended Monthly Income');
 }
 function graph_yearly_rent_data()
 {
@@ -183,9 +183,9 @@ function graph_yearly_rent_data()
     yearly_rent_chart.destroy();
   }
 
-  let labels=get_values(appartment_data,'Type') as string[];
+  let labels=get_values(apartment_data,'Type') as string[];
   labels=shorten_values(labels);
-  let values=get_values(appartment_data,'Monthly_Rent');
+  let values=get_values(apartment_data,'Monthly_Rent');
   values=values.map(value=>value*12);
   let values_recommended_yearly=values.map(value=>value/target_percent);
 
@@ -199,7 +199,7 @@ function graph_yearly_rent_data()
     labels: labels,
     datasets: [
     {
-      label: `Appartment Yearly Rent Costs`,
+      label: `Apartment Yearly Rent Costs`,
       data: values,
       borderWidth: 1
     },
@@ -213,7 +213,7 @@ function graph_yearly_rent_data()
 
 
   let yearly_rent_results_canvas=document.getElementById("yearly_rent_results_canvas") as HTMLCanvasElement;
-  yearly_rent_chart=make_bar_chart(yearly_wages_chart,yearly_rent_results_canvas,data,'Appartment Rent and Recommended Yearly Income');
+  yearly_rent_chart=make_bar_chart(yearly_wages_chart,yearly_rent_results_canvas,data,'Apartment Rent and Recommended Yearly Income');
 }
 
 export function update_values()
@@ -234,11 +234,12 @@ export function update_values()
   }
   filtered_career_data=filtered_career_data.slice(0,10);
 
-  graph_yearly_wages_data(filtered_career_data);
-  graph_monthly_wages_data(filtered_career_data);
-  graph_appartment_payment_data(filtered_career_data);
   graph_monthly_rent_data();
   graph_yearly_rent_data();
+  graph_yearly_wages_data(filtered_career_data);
+  graph_monthly_wages_data(filtered_career_data);
+  graph_apartment_payment_data(filtered_career_data);
+  
 }
 export async function main()
 {
@@ -246,21 +247,21 @@ export async function main()
   for(let i=0;i<career_data.length;i++)
   {
     career_data[i]["2025 Median Wages Monthly"]=career_data[i]["2025 Median Wages Annual"]/12;
-    career_data[i]["2025 Recommended Appartment Payment"]=career_data[i]["2025 Median Wages Monthly"]*target_percent;
+    career_data[i]["2025 Recommended Apartment Payment"]=career_data[i]["2025 Median Wages Monthly"]*target_percent;
   }
-  appartment_data=await get_data("New_Jersey_Expenses.xlsx","Appartments");
+  apartment_data=await get_data("New_Jersey_Expenses.xlsx","Apartments_V2");
 
   update_values();
 }
 
 let career_data: Record<any, any>[]=[];
-let appartment_data: Record<any, any>[]=[];
+let apartment_data: Record<any, any>[]=[];
 
 let target_percent=0.30;
 let target_percent_written="30%";
 
 let yearly_wages_chart: Chart | null = null;
 let monthly_wages_chart: Chart | null = null;
-let appartment_payment_chart: Chart | null = null;
+let apartment_payment_chart: Chart | null = null;
 let monthly_rent_chart: Chart | null=null;
 let yearly_rent_chart: Chart | null=null;
