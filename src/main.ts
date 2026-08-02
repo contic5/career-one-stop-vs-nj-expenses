@@ -48,7 +48,6 @@ function make_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,d
   y_range[1]=0;
   for(let value of data.datasets[0].data)
   {
-    console.log(value);
     y_range[1]=Math.max(y_range[1],parseInt(value));
   }
   let line_plugins=[];
@@ -115,9 +114,9 @@ function make_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,d
 }
 function graph_yearly_data(filtered_career_data:any)
 {
-  if(yearly_chart!=null)
+  if(yearly_wages_chart!=null)
   {
-    yearly_chart.destroy();
+    yearly_wages_chart.destroy();
   }
 
   let labels=get_values(filtered_career_data,'Occupation') as string[];
@@ -144,14 +143,14 @@ function graph_yearly_data(filtered_career_data:any)
     }]
   };
 
-  let yearly_results_canvas=document.getElementById("yearly_results_canvas") as HTMLCanvasElement;
-  yearly_chart=make_chart(yearly_chart,yearly_results_canvas,data,plugin_values,"2025 Median Annual Wages");
+  let yearly_wages_results_canvas=document.getElementById("yearly_wages_results_canvas") as HTMLCanvasElement;
+  yearly_wages_chart=make_chart(yearly_wages_chart,yearly_wages_results_canvas,data,plugin_values,"2025 Median Annual Wages");
 }
 function graph_monthly_data(filtered_career_data:any)
 {
-  if(monthly_chart!=null)
+  if(monthly_wages_chart!=null)
   {
-    monthly_chart.destroy();
+    monthly_wages_chart.destroy();
   }
 
   let labels=get_values(filtered_career_data,'Occupation') as string[];
@@ -177,15 +176,15 @@ function graph_monthly_data(filtered_career_data:any)
       borderWidth: 1
     }]
   };
-  let monthly_results_canvas=document.getElementById("monthly_results_canvas") as HTMLCanvasElement;
+  let monthly_wages_results_canvas=document.getElementById("monthly_wages_results_canvas") as HTMLCanvasElement;
   
-  monthly_chart=make_chart(monthly_chart,monthly_results_canvas,data,plugin_values,"2025 Median Monthly Wages");
+  monthly_wages_chart=make_chart(monthly_wages_chart,monthly_wages_results_canvas,data,plugin_values,"2025 Median Monthly Wages");
 }
 function graph_appartment_payment_data(filtered_career_data:any)
 {
-  if(payment_chart!=null)
+  if(appartment_payment_chart!=null)
   {
-    payment_chart.destroy();
+    appartment_payment_chart.destroy();
   }
 
   let labels=get_values(filtered_career_data,'Occupation') as string[];
@@ -212,26 +211,24 @@ function graph_appartment_payment_data(filtered_career_data:any)
     }]
   };
 
-  let payment_results_canvas=document.getElementById("payment_results_canvas") as HTMLCanvasElement;
-  payment_chart=make_chart(payment_chart,payment_results_canvas,data,plugin_values,`Appartment Payment (${target_percent_written})`);
+  let appartment_payment_results_canvas=document.getElementById("appartment_payment_results_canvas") as HTMLCanvasElement;
+  appartment_payment_chart=make_chart(appartment_payment_chart,appartment_payment_results_canvas,data,plugin_values,`Appartment Payment (${target_percent_written})`);
 }
-function graph_rent_data()
+function graph_monthly_rent_data()
 {
-  if(rent_chart!=null)
+  if(monthly_rent_chart!=null)
   {
-    rent_chart.destroy();
+    monthly_rent_chart.destroy();
   }
 
   let labels=get_values(appartment_data,'Type') as string[];
   labels=shorten_values(labels);
   let values=get_values(appartment_data,'Monthly_Rent');
   let values_recommended_monthly=values.map(value=>value/target_percent);
-  let values_recommended_yearly=values.map(value=>12*value/target_percent);
   for(let i=0;i<values.length;i++)
   {
     values[i]=Math.round(values[i]);
     values_recommended_monthly[i]=Math.round(values_recommended_monthly[i]);
-    values_recommended_yearly[i]=Math.round(values_recommended_yearly[i]);
   }
 
   const data = {
@@ -254,9 +251,9 @@ function graph_rent_data()
   y_range[1]*=1.1;
   y_range[1]=Math.ceil(y_range[1]/1000)*1000;
 
-  let rent_results_canvas=document.getElementById("rent_results_canvas") as HTMLCanvasElement;
-  rent_chart=new Chart(
-        rent_results_canvas,
+  let monthly_rent_results_canvas=document.getElementById("monthly_rent_results_canvas") as HTMLCanvasElement;
+  monthly_rent_chart=new Chart(
+        monthly_rent_results_canvas,
         {
           type: 'bar',
           data: data as any,
@@ -288,6 +285,80 @@ function graph_rent_data()
         }
     );
 }
+function graph_yearly_rent_data()
+{
+  if(yearly_rent_chart!=null)
+  {
+    yearly_rent_chart.destroy();
+  }
+
+  let labels=get_values(appartment_data,'Type') as string[];
+  labels=shorten_values(labels);
+  let values=get_values(appartment_data,'Monthly_Rent');
+  values=values.map(value=>value*12);
+  let values_recommended_yearly=values.map(value=>value/target_percent);
+
+  for(let i=0;i<values.length;i++)
+  {
+    values[i]=Math.round(values[i]);
+    values_recommended_yearly[i]=Math.round(values_recommended_yearly[i]);
+  }
+
+  const data = {
+    labels: labels,
+    datasets: [
+    {
+      label: `Appartment Yearly Rent Costs`,
+      data: values,
+      borderWidth: 1
+    },
+    {
+      label: `Recommended Yearly Income`,
+      data: values_recommended_yearly,
+      borderWidth: 1
+    },
+    ]
+  };
+
+  y_range[1]=values_recommended_yearly[values_recommended_yearly.length-1];
+  y_range[1]*=1.1;
+  y_range[1]=Math.ceil(y_range[1]/1000)*1000;
+
+  let yearly_rent_results_canvas=document.getElementById("yearly_rent_results_canvas") as HTMLCanvasElement;
+  yearly_rent_chart=new Chart(
+        yearly_rent_results_canvas,
+        {
+          type: 'bar',
+          data: data as any,
+          options:
+          {
+            scales: 
+            {
+              y: {
+                min: 0,
+                max: y_range[1],
+                ticks: 
+                {
+                  // Appends % symbol to the y-axis grid text
+                  callback: function(value) 
+                  {
+                    return "$ "+value;
+                  }
+                }
+              }
+            },
+            plugins:
+            {
+              title:{
+                display: true,
+                text: `Appartment Rent and Recommended Yearly Income`
+              }
+            }
+          },
+        }
+    );
+}
+
 export function update_values()
 {
   const target_education_level_element=document.getElementById("education_level") as HTMLInputElement;
@@ -309,7 +380,8 @@ export function update_values()
   graph_yearly_data(filtered_career_data);
   graph_monthly_data(filtered_career_data);
   graph_appartment_payment_data(filtered_career_data);
-  graph_rent_data();
+  graph_monthly_rent_data();
+  graph_yearly_rent_data();
 }
 export async function main()
 {
@@ -331,7 +403,8 @@ let target_percent=0.30;
 let target_percent_written="30%";
 
 let y_range=[0,0];
-let yearly_chart: Chart | null = null;
-let monthly_chart: Chart | null = null;
-let payment_chart: Chart | null = null;
-let rent_chart: Chart | null=null;
+let yearly_wages_chart: Chart | null = null;
+let monthly_wages_chart: Chart | null = null;
+let appartment_payment_chart: Chart | null = null;
+let monthly_rent_chart: Chart | null=null;
+let yearly_rent_chart: Chart | null=null;
