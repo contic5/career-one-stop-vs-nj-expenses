@@ -10,7 +10,8 @@ function get_values(arr:any,key:string)
   }
   return res;
 }
-function get_min_and_max(arr:any,key:string)
+/*
+function get_min_and_max_dictionary(arr:any,key:string)
 {
   let res=[Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER];
   for(let item of arr)
@@ -20,6 +21,8 @@ function get_min_and_max(arr:any,key:string)
   }
   return res;
 }
+*/
+
 function shorten_values(values:string[])
 {
   let res=[];
@@ -36,11 +39,44 @@ function shorten_values(values:string[])
   }
   return res;
 }
-function make_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,data:any,line_plugins:any,chart_title:string)
+function make_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,data:any,plugin_values:number[],chart_title:string)
 {
   if (target_chart != null) {
     target_chart.destroy();
   }
+
+  y_range[1]=0;
+  for(let value of data.datasets[0].data)
+  {
+    console.log(value);
+    y_range[1]=Math.max(y_range[1],parseInt(value));
+  }
+  let line_plugins=[];
+  for(let plugin_value of plugin_values)
+  {
+    y_range[1]=Math.max(y_range[1],plugin_value);
+
+    const line_plugin = 
+      {
+          id: 'horizontalLine',
+          afterDraw: (chart:any) => {
+              const yValue = chart.scales.y.getPixelForValue(plugin_value);
+              const ctx = chart.ctx;
+              ctx.save();
+              ctx.beginPath();
+              ctx.moveTo(chart.chartArea.left, yValue);
+              ctx.lineTo(chart.chartArea.right, yValue);
+              ctx.strokeStyle = "black";
+              ctx.lineWidth = 2;
+              ctx.stroke();
+              ctx.restore();
+          }
+    };
+    line_plugins.push(line_plugin);
+  }
+  y_range[1]*=1.1;
+  y_range[1]=Math.ceil(y_range[1]/1000)*1000;
+
 
   target_chart=new Chart(
         target_canvas,
@@ -92,27 +128,11 @@ function graph_yearly_data(filtered_career_data:any)
     values[i]=Math.round(values[i]);
   }
 
-  let line_plugins=[];
+  let plugin_values=[];
   for(let i=1;i<appartment_data.length;i++)
   {
     const appartment_type=appartment_data[i];
-    const line_plugin = 
-    {
-        id: 'horizontalLine',
-        afterDraw: (chart:any) => {
-            const yValue = chart.scales.y.getPixelForValue(appartment_type['Monthly_Rent']*12/target_percent);
-            const ctx = chart.ctx;
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(chart.chartArea.left, yValue);
-            ctx.lineTo(chart.chartArea.right, yValue);
-            ctx.strokeStyle = "black";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.restore();
-        }
-    };
-    line_plugins.push(line_plugin);
+    plugin_values.push(appartment_type['Monthly_Rent']*12/target_percent);
   }
 
   const data = {
@@ -124,12 +144,8 @@ function graph_yearly_data(filtered_career_data:any)
     }]
   };
 
-  y_range=get_min_and_max(filtered_career_data,"2025 Median Wages Annual");
-  y_range[1]=Math.max(y_range[1],appartment_data[appartment_data.length-1]['Monthly_Rent']*12/target_percent);
-  y_range[1]*=1.1;
-  y_range[1]=Math.ceil(y_range[1]/1000)*1000;
   let yearly_results_canvas=document.getElementById("yearly_results_canvas") as HTMLCanvasElement;
-  yearly_chart=make_chart(yearly_chart,yearly_results_canvas,data,line_plugins,"2025 Median Annual Wages");
+  yearly_chart=make_chart(yearly_chart,yearly_results_canvas,data,plugin_values,"2025 Median Annual Wages");
 }
 function graph_monthly_data(filtered_career_data:any)
 {
@@ -146,27 +162,11 @@ function graph_monthly_data(filtered_career_data:any)
     values[i]=Math.round(values[i]);
   }
   
-  let line_plugins=[]
+  let plugin_values=[];
   for(let i=1;i<appartment_data.length;i++)
   {
     const appartment_type=appartment_data[i];
-    const line_plugin = 
-    {
-        id: 'horizontalLine',
-        afterDraw: (chart:any) => {
-            const yValue = chart.scales.y.getPixelForValue(appartment_type['Monthly_Rent']/target_percent);
-            const ctx = chart.ctx;
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(chart.chartArea.left, yValue);
-            ctx.lineTo(chart.chartArea.right, yValue);
-            ctx.strokeStyle = "black";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.restore();
-        }
-    };
-    line_plugins.push(line_plugin);
+    plugin_values.push(appartment_type['Monthly_Rent']/target_percent);
   }
 
   const data = {
@@ -177,14 +177,9 @@ function graph_monthly_data(filtered_career_data:any)
       borderWidth: 1
     }]
   };
-
-  y_range=get_min_and_max(filtered_career_data,"2025 Median Wages Monthly");
-  y_range[1]=Math.max(y_range[1],appartment_data[appartment_data.length-1]['Monthly_Rent']/target_percent);
-  y_range[1]*=1.1;
-  y_range[1]=Math.ceil(y_range[1]/1000)*1000;
   let monthly_results_canvas=document.getElementById("monthly_results_canvas") as HTMLCanvasElement;
   
-  monthly_chart=make_chart(monthly_chart,monthly_results_canvas,data,line_plugins,"2025 Median Monthly Wages");
+  monthly_chart=make_chart(monthly_chart,monthly_results_canvas,data,plugin_values,"2025 Median Monthly Wages");
 }
 function graph_appartment_payment_data(filtered_career_data:any)
 {
@@ -201,27 +196,11 @@ function graph_appartment_payment_data(filtered_career_data:any)
     values[i]=Math.round(values[i]);
   }
 
-  let line_plugins=[]
+  let plugin_values=[];
   for(let i=1;i<appartment_data.length;i++)
   {
     const appartment_type=appartment_data[i];
-    const line_plugin = 
-    {
-        id: 'horizontalLine',
-        afterDraw: (chart:any) => {
-            const yValue = chart.scales.y.getPixelForValue(appartment_type['Monthly_Rent']);
-            const ctx = chart.ctx;
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(chart.chartArea.left, yValue);
-            ctx.lineTo(chart.chartArea.right, yValue);
-            ctx.strokeStyle = "black";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.restore();
-        }
-    };
-    line_plugins.push(line_plugin);
+    plugin_values.push(appartment_type['Monthly_Rent']);
   }
 
   const data = {
@@ -233,13 +212,8 @@ function graph_appartment_payment_data(filtered_career_data:any)
     }]
   };
 
-  y_range=get_min_and_max(filtered_career_data,"2025 Appartment Payment");
-  y_range[1]=Math.max(y_range[1],appartment_data[appartment_data.length-1]['Monthly_Rent']/target_percent);
-  y_range[1]*=1.1;
-  y_range[1]=Math.ceil(y_range[1]/1000)*1000;
-
   let payment_results_canvas=document.getElementById("payment_results_canvas") as HTMLCanvasElement;
-  payment_chart=make_chart(payment_chart,payment_results_canvas,data,line_plugins,`Appartment Payment (${target_percent_written})`);
+  payment_chart=make_chart(payment_chart,payment_results_canvas,data,plugin_values,`Appartment Payment (${target_percent_written})`);
 }
 function graph_rent_data()
 {
