@@ -38,6 +38,10 @@ function shorten_values(values:string[])
 }
 function make_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,data:any,line_plugins:any,chart_title:string)
 {
+  if (target_chart != null) {
+    target_chart.destroy();
+  }
+
   target_chart=new Chart(
         target_canvas,
         {
@@ -71,6 +75,7 @@ function make_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,d
           plugins: line_plugins
         }
     );
+    return target_chart;
 }
 function graph_yearly_data(filtered_career_data:any)
 {
@@ -124,39 +129,7 @@ function graph_yearly_data(filtered_career_data:any)
   y_range[1]*=1.1;
   y_range[1]=Math.ceil(y_range[1]/1000)*1000;
   let yearly_results_canvas=document.getElementById("yearly_results_canvas") as HTMLCanvasElement;
-  yearly_chart=new Chart(
-        yearly_results_canvas,
-        {
-          type: 'line',
-          data: data as any,
-          options:
-          {
-            scales: 
-            {
-              y: {
-                min: 0,
-                max: y_range[1],
-                ticks: 
-                {
-                  // Appends % symbol to the y-axis grid text
-                  callback: function(value) 
-                  {
-                    return "$ "+value;
-                  }
-                }
-              }
-            },
-            plugins:
-            {
-              title:{
-                display: true,
-                text: "2025 Median Annual Wages"
-              }
-            }
-          },
-          plugins: line_plugins
-        }
-    );
+  yearly_chart=make_chart(yearly_chart,yearly_results_canvas,data,line_plugins,"2025 Median Annual Wages");
 }
 function graph_monthly_data(filtered_career_data:any)
 {
@@ -173,7 +146,6 @@ function graph_monthly_data(filtered_career_data:any)
     values[i]=Math.round(values[i]);
   }
   
-
   let line_plugins=[]
   for(let i=1;i<appartment_data.length;i++)
   {
@@ -212,9 +184,9 @@ function graph_monthly_data(filtered_career_data:any)
   y_range[1]=Math.ceil(y_range[1]/1000)*1000;
   let monthly_results_canvas=document.getElementById("monthly_results_canvas") as HTMLCanvasElement;
   
-  make_chart(monthly_chart,monthly_results_canvas,data,line_plugins,"2025 Median Monthly Wages");
+  monthly_chart=make_chart(monthly_chart,monthly_results_canvas,data,line_plugins,"2025 Median Monthly Wages");
 }
-function graph_payment_data(filtered_career_data:any)
+function graph_appartment_payment_data(filtered_career_data:any)
 {
   if(payment_chart!=null)
   {
@@ -267,39 +239,7 @@ function graph_payment_data(filtered_career_data:any)
   y_range[1]=Math.ceil(y_range[1]/1000)*1000;
 
   let payment_results_canvas=document.getElementById("payment_results_canvas") as HTMLCanvasElement;
-  payment_chart=new Chart(
-        payment_results_canvas,
-        {
-          type: 'line',
-          data: data as any,
-          options:
-          {
-            scales: 
-            {
-              y: {
-                min: 0,
-                max: y_range[1],
-                ticks: 
-                {
-                  // Appends % symbol to the y-axis grid text
-                  callback: function(value) 
-                  {
-                    return "$ "+value;
-                  }
-                }
-              }
-            },
-            plugins:
-            {
-              title:{
-                display: true,
-                text: `Appartment Payment (${target_percent_written})`
-              }
-            }
-          },
-          plugins: line_plugins
-        }
-    );
+  payment_chart=make_chart(payment_chart,payment_results_canvas,data,line_plugins,`Appartment Payment (${target_percent_written})`);
 }
 function graph_rent_data()
 {
@@ -311,11 +251,13 @@ function graph_rent_data()
   let labels=get_values(appartment_data,'Type') as string[];
   labels=shorten_values(labels);
   let values=get_values(appartment_data,'Monthly_Rent');
-  let values_recommended=values.map(value=>value/target_percent);
+  let values_recommended_monthly=values.map(value=>value/target_percent);
+  let values_recommended_yearly=values.map(value=>12*value/target_percent);
   for(let i=0;i<values.length;i++)
   {
     values[i]=Math.round(values[i]);
-    values_recommended[i]=Math.round(values_recommended[i]);
+    values_recommended_monthly[i]=Math.round(values_recommended_monthly[i]);
+    values_recommended_yearly[i]=Math.round(values_recommended_yearly[i]);
   }
 
   const data = {
@@ -328,13 +270,13 @@ function graph_rent_data()
     },
     {
       label: `Recommended Monthly Income`,
-      data: values_recommended,
+      data: values_recommended_monthly,
       borderWidth: 1
     },
     ]
   };
 
-  y_range[1]=values_recommended[values_recommended.length-1];
+  y_range[1]=values_recommended_monthly[values_recommended_monthly.length-1];
   y_range[1]*=1.1;
   y_range[1]=Math.ceil(y_range[1]/1000)*1000;
 
@@ -365,7 +307,7 @@ function graph_rent_data()
             {
               title:{
                 display: true,
-                text: `Appartment Rent and Recommended Income`
+                text: `Appartment Rent and Recommended Monthly Income`
               }
             }
           },
@@ -392,7 +334,7 @@ export function update_values()
 
   graph_yearly_data(filtered_career_data);
   graph_monthly_data(filtered_career_data);
-  graph_payment_data(filtered_career_data);
+  graph_appartment_payment_data(filtered_career_data);
   graph_rent_data();
 }
 export async function main()
