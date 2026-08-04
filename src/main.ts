@@ -43,22 +43,22 @@ function shorten_values(values:string[],max_length=18)
   return res;
 }
 
-//Graph yearly wages and draw lines for the recommended yearly wages for apartment rents. 
-function graph_yearly_wages_data(filtered_career_data:any)
+//Graph yearly incomes and draw lines for the recommended yearly incomes for apartment rents. 
+function graph_yearly_incomes_data(filtered_career_data:any)
 {
-  if(yearly_wages_chart!=null)
+  if(yearly_incomes_chart!=null)
   {
-    yearly_wages_chart.destroy();
+    yearly_incomes_chart.destroy();
   }
 
-  let labels=get_values(filtered_career_data,'Occupation') as string[];
-  labels=shorten_values(labels);
+  let occupatons=get_values(filtered_career_data,'Occupation') as string[];
+  occupatons=shorten_values(occupatons);
 
-  //Get annual wages and round them.
-  let values=get_values(filtered_career_data,'2025 Median Wages Annual');
-  for(let i=0;i<values.length;i++)
+  //Get annual incomes and round them.
+  let annual_incomes=get_values(filtered_career_data,'2025 Median Incomes Annual');
+  for(let i=0;i<annual_incomes.length;i++)
   {
-    values[i]=Math.round(values[i]);
+    annual_incomes[i]=Math.round(annual_incomes[i]);
   }
 
   //Find how much money someone needs to make yearly to spend at most target percent on rent.
@@ -71,34 +71,34 @@ function graph_yearly_wages_data(filtered_career_data:any)
 
   //Set up chart data
   const data = {
-    labels: labels,
+    labels: occupatons,
     datasets: [{
-      label: 'Annual Pay',
-      data: values,
+      label: 'Annual Income',
+      data: annual_incomes,
       borderWidth: 1
     }]
   };
 
-  let yearly_wages_results_canvas=document.getElementById("yearly_wages_results_canvas") as HTMLCanvasElement;
-  yearly_wages_chart=make_line_chart(yearly_wages_chart,yearly_wages_results_canvas,data,rent_spending_values,"2025 Median Annual Wages");
+  let yearly_incomes_results_canvas=document.getElementById("yearly_incomes_results_canvas") as HTMLCanvasElement;
+  yearly_incomes_chart=make_line_chart(yearly_incomes_chart,yearly_incomes_results_canvas,data,rent_spending_values,appartment_types,"2025 Median Annual Incomes");
 }
 
-//Graph monthly wages and draw lines for the recommended yearly wages for apartment rents. 
-function graph_monthly_wages_data(filtered_career_data:any)
+//Graph monthly incomes and draw lines for the recommended yearly incomes for apartment rents. 
+function graph_monthly_incomes_data(filtered_career_data:any)
 {
-  if(monthly_wages_chart!=null)
+  if(monthly_incomes_chart!=null)
   {
-    monthly_wages_chart.destroy();
+    monthly_incomes_chart.destroy();
   }
 
-  let labels=get_values(filtered_career_data,'Occupation') as string[];
-  labels=shorten_values(labels);
+  let occupatons=get_values(filtered_career_data,'Occupation') as string[];
+  occupatons=shorten_values(occupatons);
 
-  //Get monthly wages and round them.
-  let values=get_values(filtered_career_data,'2025 Median Wages Monthly');
-  for(let i=0;i<values.length;i++)
+  //Get monthly incomes and round them.
+  let monthly_incomes=get_values(filtered_career_data,'2025 Median Incomes Monthly');
+  for(let i=0;i<monthly_incomes.length;i++)
   {
-    values[i]=Math.round(values[i]);
+    monthly_incomes[i]=Math.round(monthly_incomes[i]);
   }
 
   //Find how much money someone needs to make monthly to spend at most target percent on rent.
@@ -111,15 +111,15 @@ function graph_monthly_wages_data(filtered_career_data:any)
 
   //Set up chart data
   const data = {
-    labels: labels,
+    labels: occupatons,
     datasets: [{
-      label: 'Monthly Pay',
-      data: values,
+      label: 'Monthly Income',
+      data: monthly_incomes,
       borderWidth: 1
     }]
   };
-  let monthly_wages_results_canvas=document.getElementById("monthly_wages_results_canvas") as HTMLCanvasElement;
-  monthly_wages_chart=make_line_chart(monthly_wages_chart,monthly_wages_results_canvas,data,rent_spending_values,"2025 Median Monthly Wages");
+  let monthly_incomes_results_canvas=document.getElementById("monthly_incomes_results_canvas") as HTMLCanvasElement;
+  monthly_incomes_chart=make_line_chart(monthly_incomes_chart,monthly_incomes_results_canvas,data,rent_spending_values,appartment_types,"2025 Median Monthly Incomes");
 }
 function graph_apartment_payment_data(filtered_career_data:any)
 {
@@ -128,15 +128,15 @@ function graph_apartment_payment_data(filtered_career_data:any)
     apartment_payment_chart.destroy();
   }
 
-  let labels=get_values(filtered_career_data,'Occupation') as string[];
-  labels=shorten_values(labels);
+  let occupatons=get_values(filtered_career_data,'Occupation') as string[];
+  occupatons=shorten_values(occupatons);
 
-  //Find target_percent * monthly wages. Round the result.
-  let values=get_values(filtered_career_data,'2025 Median Wages Monthly');
-  for(let i=0;i<values.length;i++)
+  //Find target_percent * monthly incomes. Round the result.
+  let appartment_payments=get_values(filtered_career_data,'2025 Median Incomes Monthly');
+  for(let i=0;i<appartment_payments.length;i++)
   {
-    values[i]*=target_percent;
-    values[i]=Math.round(values[i]);
+    appartment_payments[i]*=target_percent;
+    appartment_payments[i]=Math.round(appartment_payments[i]);
   }
 
   //Find monthly rent amounts for different apartment types.
@@ -149,16 +149,16 @@ function graph_apartment_payment_data(filtered_career_data:any)
 
   //Set up chart data
   const data = {
-    labels: labels,
+    labels: occupatons,
     datasets: [{
       label: `Apartment Payment (${target_percent_written})`,
-      data: values,
+      data: appartment_payments,
       borderWidth: 1
     }]
   };
 
   let apartment_payment_results_canvas=document.getElementById("apartment_payment_results_canvas") as HTMLCanvasElement;
-  apartment_payment_chart=make_line_chart(apartment_payment_chart,apartment_payment_results_canvas,data,rent_spending_values,`Apartment Payment (${target_percent_written})`);
+  apartment_payment_chart=make_line_chart(apartment_payment_chart,apartment_payment_results_canvas,data,rent_spending_values,appartment_types,`Apartment Payment (${target_percent_written})`);
 }
 
 //Create bar charts for different types of monthly rent
@@ -173,14 +173,14 @@ function graph_monthly_rent_data()
   labels=shorten_values(labels);
 
   //Get monthly rent
-  let values=get_values(apartment_data,'Monthly_Rent');
+  let monthly_rents=get_values(apartment_data,'Monthly_Rent');
 
-  //Get the minimum monthly wages to spend at most target_percent on rent.
-  let values_recommended_monthly=values.map(value=>value/target_percent);
-  for(let i=0;i<values.length;i++)
+  //Get the minimum monthly incomes to spend at most target_percent on rent.
+  let recommended_monthly_incomes=monthly_rents.map(monthly_rent=>monthly_rent/target_percent);
+  for(let i=0;i<monthly_rents.length;i++)
   {
-    values[i]=Math.round(values[i]);
-    values_recommended_monthly[i]=Math.round(values_recommended_monthly[i]);
+    monthly_rents[i]=Math.round(monthly_rents[i]);
+    recommended_monthly_incomes[i]=Math.round(recommended_monthly_incomes[i]);
   }
 
   //Set up bar chart data
@@ -189,12 +189,12 @@ function graph_monthly_rent_data()
     datasets: [
     {
       label: `Apartment Monthly Rent Costs`,
-      data: values,
+      data: monthly_rents,
       borderWidth: 1
     },
     {
       label: `Recommended Monthly Income`,
-      data: values_recommended_monthly,
+      data: recommended_monthly_incomes,
       borderWidth: 1
     },
     ]
@@ -216,15 +216,15 @@ function graph_yearly_rent_data()
   labels=shorten_values(labels);
 
   //Get the monthly rent and multiply by 12 to get the yearly rent
-  let values=get_values(apartment_data,'Monthly_Rent');
-  values=values.map(value=>value*12);
+  let yearly_rents=get_values(apartment_data,'Monthly_Rent');
+  yearly_rents=yearly_rents.map(monthly_rent=>monthly_rent*12);
 
-  //Get the minimum yearly wages to spend at most target_percent on rent.
-  let values_recommended_yearly=values.map(value=>value/target_percent);
-  for(let i=0;i<values.length;i++)
+  //Get the minimum yearly income to spend at most target_percent on rent.
+  let recommended_yearly_incomes=yearly_rents.map(yearly_rent=>yearly_rent/target_percent);
+  for(let i=0;i<yearly_rents.length;i++)
   {
-    values[i]=Math.round(values[i]);
-    values_recommended_yearly[i]=Math.round(values_recommended_yearly[i]);
+    yearly_rents[i]=Math.round(yearly_rents[i]);
+    recommended_yearly_incomes[i]=Math.round(recommended_yearly_incomes[i]);
   }
 
   //Set up bar chart data
@@ -233,20 +233,19 @@ function graph_yearly_rent_data()
     datasets: [
     {
       label: `Apartment Yearly Rent Costs`,
-      data: values,
+      data: yearly_rents,
       borderWidth: 1
     },
     {
       label: `Recommended Yearly Income`,
-      data: values_recommended_yearly,
+      data: recommended_yearly_incomes,
       borderWidth: 1
     },
     ]
   };
 
-
   let yearly_rent_results_canvas=document.getElementById("yearly_rent_results_canvas") as HTMLCanvasElement;
-  yearly_rent_chart=make_bar_chart(yearly_wages_chart,yearly_rent_results_canvas,data,'Apartment Rent and Recommended Yearly Income');
+  yearly_rent_chart=make_bar_chart(yearly_incomes_chart,yearly_rent_results_canvas,data,'Apartment Rent and Recommended Yearly Income');
 }
 
 //Get updated input values
@@ -279,8 +278,8 @@ export function update_values()
 
   graph_monthly_rent_data();
   graph_yearly_rent_data();
-  graph_yearly_wages_data(filtered_career_data);
-  graph_monthly_wages_data(filtered_career_data);
+  graph_yearly_incomes_data(filtered_career_data);
+  graph_monthly_incomes_data(filtered_career_data);
   graph_apartment_payment_data(filtered_career_data);
   
 }
@@ -290,23 +289,25 @@ export async function main()
   career_data=await get_data("CareerOneStop_Data.xlsx");
   for(let i=0;i<career_data.length;i++)
   {
-    //Divide monthly wages by 12
-    career_data[i]["2025 Median Wages Monthly"]=career_data[i]["2025 Median Wages Annual"]/12;
+    //Divide monthly incomes by 12
+    career_data[i]["2025 Median Incomes Monthly"]=career_data[i]["2025 Median Incomes Annual"]/12;
   }
   //Get apartment cost data
   apartment_data=await get_data("New_Jersey_Expenses.xlsx","Apartments_V2");
+  appartment_types=get_values(apartment_data,"Type");
 
   update_values();
 }
 
 let career_data: Record<any, any>[]=[];
 let apartment_data: Record<any, any>[]=[];
+let appartment_types:string[]=[];
 
 let target_percent=0.30;
 let target_percent_written="30%";
 
-let yearly_wages_chart: Chart | null = null;
-let monthly_wages_chart: Chart | null = null;
+let yearly_incomes_chart: Chart | null = null;
+let monthly_incomes_chart: Chart | null = null;
 let apartment_payment_chart: Chart | null = null;
 let monthly_rent_chart: Chart | null=null;
 let yearly_rent_chart: Chart | null=null;

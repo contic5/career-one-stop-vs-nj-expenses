@@ -1,6 +1,6 @@
 import Chart from 'chart.js/auto';
 
-export function make_line_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,data:any,rent_spending_values:number[],chart_title:string)
+export function make_line_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,data:any,rent_spending_values:number[],appartment_types:string[],chart_title:string)
 {
   if (target_chart != null) {
     target_chart.destroy();
@@ -16,8 +16,11 @@ export function make_line_chart(target_chart:Chart | null,target_canvas: HTMLCan
   let line_plugins=[];
 
   //Loop through rent spending values to create line plugins. Also track the highest point on the graph.
-  for(let rent_spending_value of rent_spending_values)
+  for(let i=0;i<rent_spending_values.length;i++)
   {
+    const rent_spending_value=rent_spending_values[i];
+    const appartment_type=appartment_types[i];
+    console.log(appartment_type);
     //Track highest point on the graph
     max_val=Math.max(max_val,rent_spending_value);
 
@@ -28,12 +31,18 @@ export function make_line_chart(target_chart:Chart | null,target_canvas: HTMLCan
               const yValue = chart.scales.y.getPixelForValue(rent_spending_value);
               const ctx = chart.ctx;
               ctx.save();
+
               ctx.beginPath();
               ctx.moveTo(chart.chartArea.left, yValue);
               ctx.lineTo(chart.chartArea.right, yValue);
               ctx.strokeStyle = "black";
               ctx.lineWidth = 2;
               ctx.stroke();
+
+              ctx.fillStyle = "black";
+              ctx.textAlign = "center";     // Centers text horizontally around the X coordinate
+              ctx.fillText(`${appartment_type}`,chart.width/2,yValue-4);
+
               ctx.restore();
           }
     };
