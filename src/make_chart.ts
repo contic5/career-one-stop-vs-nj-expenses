@@ -1,6 +1,6 @@
 import Chart from 'chart.js/auto';
 
-export function make_line_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,data:any,rent_spending_values:number[],appartment_types:string[],chart_title:string)
+export function make_income_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,data:any,rent_spending_values:number[],appartment_types:string[],chart_title:string)
 {
   if (target_chart != null) {
     target_chart.destroy();
@@ -56,7 +56,7 @@ export function make_line_chart(target_chart:Chart | null,target_canvas: HTMLCan
   target_chart=new Chart(
         target_canvas,
         {
-          type: 'line',
+          type: 'bar',
           data: data as any,
           options:
           {
@@ -88,7 +88,7 @@ export function make_line_chart(target_chart:Chart | null,target_canvas: HTMLCan
     );
     return target_chart;
 }
-export function make_bar_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,data:any,chart_title:string)
+export function make_rent_chart(target_chart:Chart | null,target_canvas: HTMLCanvasElement,data:any,chart_title:string)
 {
     if (target_chart != null) {
     target_chart.destroy();

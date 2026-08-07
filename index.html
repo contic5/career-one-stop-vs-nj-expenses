@@ -11,6 +11,16 @@
   <body>
   <main>
   <h1>Career One Stop vs NJ Expenses</h1>
+  <h2 id="about">About</h2>
+  <p>This project graphs CareerOneStop job salary data against New Jersey 1 bedroom apartment expenses from Apartments.com.</p>
+  <p>There are five main charts:</p>
+  <ol>
+  <li>Apartment Rent and Recommended Monthly Income: Bar plot that displays how much an apartment type costs per month and the recommended monthly income for that apartment.</li>
+  <li>Apartment Rent and Recommended Yearly Income: Bar plot that displays how much an apartment type costs per year and the recommended yearly income for that apartment.</li>
+  <li>2025 Median Monthly Incomes: Bar plot with job median monthly incomes and horizontal lines displaying the recommended monthly income for apartment types.</li>
+  <li>2025 Median Yearly Incomes: Bar plot with job median yearly incomes and horizontal lines displaying the recommended yearly income for apartment types.</li>
+  <li>Apartment Payment (Target Percent): Bar plot displaying the recommended apartment payment based on median job wage and taget percent. Horizontal lines also display the apartment payment for apartment types.</li>
+  </ol>
   <h2>Settings</h2>
   <form>
   
@@ -57,21 +67,21 @@
   <div id="yearly_rent_results">
   <canvas id="yearly_rent_results_canvas"></canvas>
   </div>
-  <div id="yearly_incomes_results">
-  <canvas id="yearly_incomes_results_canvas"></canvas>
   </div>
   <div id="monthly_incomes_results">
   <canvas id="monthly_incomes_results_canvas"></canvas>
   </div>
+   <div id="yearly_incomes_results">
+  <canvas id="yearly_incomes_results_canvas"></canvas>
   <div id="apartment_payment_results">
   <canvas id="apartment_payment_results_canvas"></canvas>
   </div>
 
-  <h2>Works Cited</h2>
-  <ul>
-  <li>Median NJ Incomes are from CareerOneStop</li>
-  <li>NJ Apartment Prices are from apartments.com</li>
-  </ul>
+  <h2 id="works-cited">Works Cited</h2>
+  <ol>
+  <li><a href="https://www.apartments.com/rent-market-trends/nj/">https://www.apartments.com/rent-market-trends/nj/</a></li>
+  <li><a href="https://www.careeronestop.org/">https://www.careeronestop.org/</a></li>
+  </ol>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
   <script type="module" src="/src/main.ts"></script>

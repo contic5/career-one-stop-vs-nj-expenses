@@ -1,6 +1,6 @@
 import get_data from "./read_excel";
 import Chart from 'chart.js/auto';
-import { make_bar_chart, make_line_chart } from "./make_chart";
+import { make_rent_chart, make_income_chart } from "./make_chart";
 
 //Get all values of specific key in dictionary array
 function get_values(arr:any,key:string)
@@ -80,7 +80,7 @@ function graph_yearly_incomes_data(filtered_career_data:any)
   };
 
   let yearly_incomes_results_canvas=document.getElementById("yearly_incomes_results_canvas") as HTMLCanvasElement;
-  yearly_incomes_chart=make_line_chart(yearly_incomes_chart,yearly_incomes_results_canvas,data,rent_spending_values,appartment_types,"2025 Median Annual Incomes");
+  yearly_incomes_chart=make_income_chart(yearly_incomes_chart,yearly_incomes_results_canvas,data,rent_spending_values,appartment_types,"2025 Median Annual Incomes");
 }
 
 //Graph monthly incomes and draw lines for the recommended yearly incomes for apartment rents. 
@@ -119,7 +119,7 @@ function graph_monthly_incomes_data(filtered_career_data:any)
     }]
   };
   let monthly_incomes_results_canvas=document.getElementById("monthly_incomes_results_canvas") as HTMLCanvasElement;
-  monthly_incomes_chart=make_line_chart(monthly_incomes_chart,monthly_incomes_results_canvas,data,rent_spending_values,appartment_types,"2025 Median Monthly Incomes");
+  monthly_incomes_chart=make_income_chart(monthly_incomes_chart,monthly_incomes_results_canvas,data,rent_spending_values,appartment_types,"2025 Median Monthly Incomes");
 }
 function graph_apartment_payment_data(filtered_career_data:any)
 {
@@ -158,7 +158,7 @@ function graph_apartment_payment_data(filtered_career_data:any)
   };
 
   let apartment_payment_results_canvas=document.getElementById("apartment_payment_results_canvas") as HTMLCanvasElement;
-  apartment_payment_chart=make_line_chart(apartment_payment_chart,apartment_payment_results_canvas,data,rent_spending_values,appartment_types,`Apartment Payment (${target_percent_written})`);
+  apartment_payment_chart=make_income_chart(apartment_payment_chart,apartment_payment_results_canvas,data,rent_spending_values,appartment_types,`Apartment Payment (${target_percent_written})`);
 }
 
 //Create bar charts for different types of monthly rent
@@ -169,8 +169,8 @@ function graph_monthly_rent_data()
     monthly_rent_chart.destroy();
   }
 
-  let labels=get_values(apartment_data,'Type') as string[];
-  labels=shorten_values(labels);
+  let long_labels=get_values(apartment_data,'Type') as string[];
+  let labels=shorten_values(long_labels);
 
   //Get monthly rent
   let monthly_rents=get_values(apartment_data,'Monthly_Rent');
@@ -201,7 +201,7 @@ function graph_monthly_rent_data()
   };
 
   let monthly_rent_results_canvas=document.getElementById("monthly_rent_results_canvas") as HTMLCanvasElement;
-  monthly_rent_chart=make_bar_chart(monthly_rent_chart,monthly_rent_results_canvas,data,'Apartment Rent and Recommended Monthly Income');
+  monthly_rent_chart=make_rent_chart(monthly_rent_chart,monthly_rent_results_canvas,data,'Apartment Rent and Recommended Monthly Income');
 }
 
 //Create bar charts for different types of yearly rent
@@ -245,7 +245,7 @@ function graph_yearly_rent_data()
   };
 
   let yearly_rent_results_canvas=document.getElementById("yearly_rent_results_canvas") as HTMLCanvasElement;
-  yearly_rent_chart=make_bar_chart(yearly_incomes_chart,yearly_rent_results_canvas,data,'Apartment Rent and Recommended Yearly Income');
+  yearly_rent_chart=make_rent_chart(yearly_incomes_chart,yearly_rent_results_canvas,data,'Apartment Rent and Recommended Yearly Income');
 }
 
 //Get updated input values
