@@ -39,6 +39,11 @@
   </div>
 
   <div>
+  <label for="page">Page</label>
+  <input id="page" type="number" value="1">
+  </div>
+
+  <div>
   <label for="target_percent">Target Percent</label>
   <table>
   <tbody>
@@ -60,14 +65,7 @@
 
   </form>
 
-  <h2>Results</h2>
-  <div id="monthly_rent_results">
-  <canvas id="monthly_rent_results_canvas"></canvas>
-  </div>
-  <div id="yearly_rent_results">
-  <canvas id="yearly_rent_results_canvas"></canvas>
-  </div>
-  </div>
+  <h2>Required Income for Apartment Percentiles</h2>
   <div id="monthly_incomes_results">
   <canvas id="monthly_incomes_results_canvas"></canvas>
   </div>
@@ -76,6 +74,16 @@
   <div id="apartment_payment_results">
   <canvas id="apartment_payment_results_canvas"></canvas>
   </div>
+
+  <h2>Apartment Costs</h2>
+  <div id="monthly_rent_results">
+  <canvas id="monthly_rent_results_canvas"></canvas>
+  </div>
+  <div id="yearly_rent_results">
+  <canvas id="yearly_rent_results_canvas"></canvas>
+  </div>
+
+  
 
   <h2 id="works-cited">Works Cited</h2>
   <ol>
@@ -89,6 +97,7 @@
   import {update_values,main} from "/src/main.ts";
 
   document.getElementById("education_level").onchange=update_values;
+  document.getElementById("page").onchange=update_values;
   document.getElementById("target_percent").onchange=update_values;
   main();
   </script>

@@ -20,7 +20,6 @@ export function make_income_chart(target_chart:Chart | null,target_canvas: HTMLC
   {
     const rent_spending_value=rent_spending_values[i];
     const appartment_type=appartment_types[i];
-    console.log(appartment_type);
     //Track highest point on the graph
     max_val=Math.max(max_val,rent_spending_value);
 

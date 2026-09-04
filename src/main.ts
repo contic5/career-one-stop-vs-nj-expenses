@@ -274,7 +274,19 @@ export function update_values()
   Get the top 10 jobs
   TODO: Add page system that lets people select more jobs
   */
-  filtered_career_data=filtered_career_data.slice(0,10);
+
+  const page_element=document.getElementById("page") as HTMLInputElement;
+  page=parseInt(page_element.value);
+  console.log(`${page} | ${filtered_career_data.length}`);
+  if(page*10>filtered_career_data.length)
+  {
+    page=Math.ceil(filtered_career_data.length/10);
+  }
+  console.log(`${page} | ${filtered_career_data.length}`);
+  const start=(page-1)*10
+  const end=Math.min(page*10,filtered_career_data.length);
+  console.log(`Start: ${start} | End: ${end} | ${filtered_career_data.length}`);
+  filtered_career_data=filtered_career_data.slice(start,end);
 
   graph_monthly_rent_data();
   graph_yearly_rent_data();
@@ -305,6 +317,9 @@ let appartment_types:string[]=[];
 
 let target_percent=0.30;
 let target_percent_written="30%";
+
+//Page determines which jobs to get.
+let page=1;
 
 let yearly_incomes_chart: Chart | null = null;
 let monthly_incomes_chart: Chart | null = null;
