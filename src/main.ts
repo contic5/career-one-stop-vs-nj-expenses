@@ -158,7 +158,7 @@ function graph_apartment_payment_data(filtered_career_data:any)
   };
 
   let apartment_payment_results_canvas=document.getElementById("apartment_payment_results_canvas") as HTMLCanvasElement;
-  apartment_payment_chart=make_income_chart(apartment_payment_chart,apartment_payment_results_canvas,data,rent_spending_values,appartment_types,`Apartment Payment (${target_percent_written})`);
+  apartment_payment_chart=make_income_chart(apartment_payment_chart,apartment_payment_results_canvas,data,rent_spending_values,appartment_types,`Apartment Payment (${target_percent}%)`);
 }
 
 //Create bar charts for different types of monthly rent
@@ -254,6 +254,9 @@ export function update_values(event:Event | null)
   const target_education_level_element=document.getElementById("education_level") as HTMLInputElement;
   const target_education_level=target_education_level_element.value;
 
+  const sort_colum_element=document.getElementById("sort_column") as HTMLInputElement;
+  sort_column=sort_colum_element.value;
+
   if(event!=null&&event.target!=null)
   {
     const target = event.target as HTMLElement;
@@ -279,8 +282,8 @@ export function update_values(event:Event | null)
   }
   
   let filtered_career_data=[...career_data];
-  //Sort jobs by most employment
-  filtered_career_data.sort((a,b)=>a['Largest_Employment_Rank']-b['Largest_Employment_Rank']);
+  //Sort jobs by target column
+  filtered_career_data.sort((a,b)=>a[sort_column]-b[sort_column]);
 
   //Filter by education level unless we are getting all education levels
   if(target_education_level!="*")
@@ -313,6 +316,19 @@ export function update_values(event:Event | null)
   graph_apartment_payment_data(filtered_career_data);
   
 }
+export function toggle_sort_direction()
+{
+  ascending_sort=!ascending_sort;
+  if(ascending_sort)
+  {
+    document.getElementById("sort_direction")!.innerHTML="ASC";
+  }
+  else
+  {
+    document.getElementById("sort_direction")!.innerHTML="DESC";
+  }
+  update_values(null);
+}
 export async function main()
 {
   //Get career data
@@ -338,6 +354,9 @@ let target_percent_written="30%";
 
 //Page determines which jobs to get.
 let page=1;
+
+let ascending_sort=false;
+let sort_column="2024 US Employment";
 
 let yearly_incomes_chart: Chart | null = null;
 let monthly_incomes_chart: Chart | null = null;

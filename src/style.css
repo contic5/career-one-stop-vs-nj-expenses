@@ -1,6 +1,6 @@
 main
 {
-    max-width: 800px;
+    max-width: 1000px;
     background-color:azure;
     padding: 10px;
     min-height: 100vh;
@@ -24,4 +24,24 @@ th,td
 canvas
 {
     margin-bottom: 20px;
+}
+.settings-row > .col
+{
+    min-width: 0;
+}
+.settings-row select,
+.settings-row input,
+.settings-row button,
+.settings-row table
+{
+    max-width: 100%;
+    box-sizing: border-box;
+}
+.settings-row table
+{
+    width: 100%;
+}
+.settings-row input[type="range"]
+{
+    width: 100%;
 }
