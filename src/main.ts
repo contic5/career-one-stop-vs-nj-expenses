@@ -151,14 +151,14 @@ function graph_apartment_payment_data(filtered_career_data:any)
   const data = {
     labels: occupatons,
     datasets: [{
-      label: `Apartment Payment (${target_percent_written})`,
+      label: `Apartment Payment (${target_percent_written}%)`,
       data: appartment_payments,
       borderWidth: 1
     }]
   };
 
   let apartment_payment_results_canvas=document.getElementById("apartment_payment_results_canvas") as HTMLCanvasElement;
-  apartment_payment_chart=make_income_chart(apartment_payment_chart,apartment_payment_results_canvas,data,rent_spending_values,appartment_types,`Apartment Payment (${target_percent}%)`);
+  apartment_payment_chart=make_income_chart(apartment_payment_chart,apartment_payment_results_canvas,data,rent_spending_values,appartment_types,`Apartment Payment (${target_percent_written}%)`);
 }
 
 //Create bar charts for different types of monthly rent
@@ -263,27 +263,34 @@ export function update_values(event:Event | null)
     if(target.id=="target_percent_input")
     {
       const new_target_percent_input=document.getElementById("target_percent_input") as HTMLInputElement;
-      target_percent=parseInt(new_target_percent_input.value)/100.0;
+      target_percent=parseInt(new_target_percent_input.value)/100;
     }
     else if(target.id=="target_percent_range")
     {
       const new_target_percent_input=document.getElementById("target_percent_range") as HTMLInputElement;
-      target_percent=parseInt(new_target_percent_input.value)/100.0;
+      target_percent=parseInt(new_target_percent_input.value)/100;
     }
 
     //Convert target_percent from number to decimal
-    target_percent_written=`${target_percent}%`;
+    target_percent_written=`${target_percent*100}`;
 
     let target_percent_input=document.getElementById("target_percent_input") as HTMLInputElement;
-    target_percent_input.value=(target_percent*100).toString();
+    target_percent_input.value=target_percent_written;
     
     let target_percent_range=document.getElementById("target_percent_range") as HTMLInputElement;
-    target_percent_range.value=(target_percent*100).toString();
+    target_percent_range.value=target_percent_written;
   }
   
   let filtered_career_data=[...career_data];
   //Sort jobs by target column
-  filtered_career_data.sort((a,b)=>a[sort_column]-b[sort_column]);
+  if(ascending_sort==true)
+  {
+    filtered_career_data.sort((a,b)=>a[sort_column]-b[sort_column]);
+  }
+  else
+  {
+    filtered_career_data.sort((a,b)=>b[sort_column]-a[sort_column]);
+  }
 
   //Filter by education level unless we are getting all education levels
   if(target_education_level!="*")
@@ -316,7 +323,7 @@ export function update_values(event:Event | null)
   graph_apartment_payment_data(filtered_career_data);
   
 }
-export function toggle_sort_direction()
+/*export function toggle_sort_direction()
 {
   ascending_sort=!ascending_sort;
   if(ascending_sort)
@@ -326,6 +333,21 @@ export function toggle_sort_direction()
   else
   {
     document.getElementById("sort_direction")!.innerHTML="DESC";
+  }
+  update_values(null);
+}*/
+export function set_ascending_sort(new_ascending_sort:boolean)
+{
+  ascending_sort=new_ascending_sort;
+  if(ascending_sort==true)
+  {
+    document.getElementById("asc_sort_button")!.style.fontWeight="bold";
+    document.getElementById("desc_sort_button")!.style.fontWeight="normal";
+  }
+  else
+  {
+    document.getElementById("asc_sort_button")!.style.fontWeight="normal";
+    document.getElementById("desc_sort_button")!.style.fontWeight="bold";
   }
   update_values(null);
 }
@@ -342,7 +364,7 @@ export async function main()
   apartment_data=await get_data("New_Jersey_Expenses.xlsx","Apartments_V2");
   appartment_types=get_values(apartment_data,"Type");
 
-  update_values(null);
+  set_ascending_sort(false);
 }
 
 let career_data: Record<any, any>[]=[];
@@ -350,7 +372,7 @@ let apartment_data: Record<any, any>[]=[];
 let appartment_types:string[]=[];
 
 let target_percent:number=0.30;
-let target_percent_written="30%";
+let target_percent_written="30";
 
 //Page determines which jobs to get.
 let page=1;
