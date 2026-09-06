@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/career-one-stop-vs-nj-expenses/favicon.svg" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>career-one-stop-vs-nj-expenses</title>
-    <script type="module" crossorigin src="/career-one-stop-vs-nj-expenses/assets/index-Dr1KNJnF.js"></script>
-    <link rel="stylesheet" crossorigin href="/career-one-stop-vs-nj-expenses/assets/index-dIvJUsMS.css">
+    <script type="module" crossorigin src="/career-one-stop-vs-nj-expenses/assets/index-BlnJN811.js"></script>
+    <link rel="stylesheet" crossorigin href="/career-one-stop-vs-nj-expenses/assets/index-78pGsNl2.css">
   </head>
   <body>
   <main>
@@ -25,10 +25,26 @@
   <h2>Settings</h2>
   <form>
   
-  <div>
-  <label for="education_level">
-  Education Level
-  </label>
+  <div class="container bg-light border">
+  <div class="row settings-row">
+  <div class="col-3 border">
+  <label for="education_level">Education Level</label>
+  </div>
+  <div class="col-3 border">
+  <label for="sort_column">Sort By</label>
+  </div>
+  <div class="col-2 border">
+  <label for="sort_direction">Direction</label>
+  </div>
+  <div class="col-1 border">
+  <label for="page">Page</label>
+  </div>
+  <div class="col-3 border">
+  <label for="target_percent">Target Percent</label>
+  </div>
+  </div>
+  <div class="row settings-row">
+  <div class="col-3 border">
   <select id="education_level">
   <option value="*">Any</option>
   <option value=1>Some High School</option>
@@ -38,15 +54,28 @@
   <option value=5>Master's Degree or Higher</option>
   </select>
   </div>
-
-  <div>
-  <label for="target_percent">Target Percent</label>
+  <div class="col-3 border">
+  <select id="sort_column">
+  <option value="2022 NJ Employment">2022 NJ Employment</option>
+  <option value="2024 US Employment">2024 US Employment</option>
+  <option value="Education_Level">Education Level</option>
+  <option value="2025 Median Incomes Annual">2025 Median Annual Income</option>
+  </select>
+  </div>
+  <div class="col-2 border">
+  <button id="asc_sort_button" type="button">↑</button>
+  <button id="desc_sort_button" type="button">↓</button>
+  </div>
+  <div class="col-1 border">
+  <input id="page" type="number" value="1" min="1" max="99">
+  </div>
+  <div class="col-3 border">
   <table>
   <tbody>
   <tr>
-  <td id="target_percent_display">30%</td>
+  <td><input id="target_percent_input" type="number" min="10" value="30" max="50"></td>
   <td colspan="3">
-    <input id="target_percent" type="range" min="10" value="30" max="50" style="width: 400px;">
+  <input id="target_percent_range" type="range" min="10" value="30" max="50">
   </td>
   </tr>
   <tr>
@@ -58,17 +87,12 @@
   </tbody>
   </table>
   </div>
+  </div>
+  </div>
 
   </form>
 
-  <h2>Results</h2>
-  <div id="monthly_rent_results">
-  <canvas id="monthly_rent_results_canvas"></canvas>
-  </div>
-  <div id="yearly_rent_results">
-  <canvas id="yearly_rent_results_canvas"></canvas>
-  </div>
-  </div>
+  <h2>Required Income for Apartment Percentiles</h2>
   <div id="monthly_incomes_results">
   <canvas id="monthly_incomes_results_canvas"></canvas>
   </div>
@@ -78,12 +102,20 @@
   <canvas id="apartment_payment_results_canvas"></canvas>
   </div>
 
+  <h2>Apartment Costs</h2>
+  <div id="monthly_rent_results">
+  <canvas id="monthly_rent_results_canvas"></canvas>
+  </div>
+  <div id="yearly_rent_results">
+  <canvas id="yearly_rent_results_canvas"></canvas>
+  </div>
+
   <h2 id="works-cited">Works Cited</h2>
   <ol>
   <li><a href="https://www.apartments.com/rent-market-trends/nj/">https://www.apartments.com/rent-market-trends/nj/</a></li>
   <li><a href="https://www.careeronestop.org/">https://www.careeronestop.org/</a></li>
   </ol>
   </main>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
   </body>
 </html>
