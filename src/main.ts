@@ -249,17 +249,35 @@ function graph_yearly_rent_data()
 }
 
 //Get updated input values
-export function update_values()
+export function update_values(event:Event | null)
 {
   const target_education_level_element=document.getElementById("education_level") as HTMLInputElement;
   const target_education_level=target_education_level_element.value;
 
-  const target_percent_element=document.getElementById("target_percent") as HTMLInputElement;
-  //Convert target_percent from number to decimal
-  target_percent=parseInt(target_percent_element.value)/100.0;
-  target_percent_written=target_percent_element.value+"%";
-  document.getElementById("target_percent_display")!.innerHTML=`${target_percent_element.value}%`;
+  if(event!=null&&event.target!=null)
+  {
+    const target = event.target as HTMLElement;
+    if(target.id=="target_percent_input")
+    {
+      const new_target_percent_input=document.getElementById("target_percent_input") as HTMLInputElement;
+      target_percent=parseInt(new_target_percent_input.value)/100.0;
+    }
+    else if(target.id=="target_percent_range")
+    {
+      const new_target_percent_input=document.getElementById("target_percent_range") as HTMLInputElement;
+      target_percent=parseInt(new_target_percent_input.value)/100.0;
+    }
 
+    //Convert target_percent from number to decimal
+    target_percent_written=`${target_percent}%`;
+
+    let target_percent_input=document.getElementById("target_percent_input") as HTMLInputElement;
+    target_percent_input.value=(target_percent*100).toString();
+    
+    let target_percent_range=document.getElementById("target_percent_range") as HTMLInputElement;
+    target_percent_range.value=(target_percent*100).toString();
+  }
+  
   let filtered_career_data=[...career_data];
   //Sort jobs by most employment
   filtered_career_data.sort((a,b)=>a['Largest_Employment_Rank']-b['Largest_Employment_Rank']);
@@ -308,14 +326,14 @@ export async function main()
   apartment_data=await get_data("New_Jersey_Expenses.xlsx","Apartments_V2");
   appartment_types=get_values(apartment_data,"Type");
 
-  update_values();
+  update_values(null);
 }
 
 let career_data: Record<any, any>[]=[];
 let apartment_data: Record<any, any>[]=[];
 let appartment_types:string[]=[];
 
-let target_percent=0.30;
+let target_percent:number=0.30;
 let target_percent_written="30%";
 
 //Page determines which jobs to get.

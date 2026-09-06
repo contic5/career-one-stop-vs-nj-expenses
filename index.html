@@ -24,10 +24,20 @@
   <h2>Settings</h2>
   <form>
   
-  <div>
-  <label for="education_level">
-  Education Level
-  </label>
+  <div class="container bg-light">
+  <div class="row">
+  <div class="col">
+  <label for="education_level">Education Level</label>
+  </div>
+  <div class="col">
+  <label for="page">Page</label>
+  </div>
+  <div class="col">
+  <label for="target_percent">Target Percent</label>
+  </div>
+  </div>
+  <div class="row">
+  <div class="col">
   <select id="education_level">
   <option value="*">Any</option>
   <option value=1>Some High School</option>
@@ -37,20 +47,16 @@
   <option value=5>Master's Degree or Higher</option>
   </select>
   </div>
-
-  <div>
-  <label for="page">Page</label>
+  <div class="col">
   <input id="page" type="number" value="1">
   </div>
-
-  <div>
-  <label for="target_percent">Target Percent</label>
+  <div class="col">
   <table>
   <tbody>
   <tr>
-  <td id="target_percent_display">30%</td>
+  <td><input id="target_percent_input" type="number" min="10" value="30" max="50"></td>
   <td colspan="3">
-    <input id="target_percent" type="range" min="10" value="30" max="50" style="width: 400px;">
+  <input id="target_percent_range" type="range" min="10" value="30" max="50">
   </td>
   </tr>
   <tr>
@@ -61,6 +67,8 @@
   </tr>
   </tbody>
   </table>
+  </div>
+  </div>
   </div>
 
   </form>
@@ -98,7 +106,8 @@
 
   document.getElementById("education_level").onchange=update_values;
   document.getElementById("page").onchange=update_values;
-  document.getElementById("target_percent").onchange=update_values;
+  document.getElementById("target_percent_input").onchange=update_values;
+  document.getElementById("target_percent_range").onchange=update_values;
   main();
   </script>
   </body>
